@@ -1,48 +1,66 @@
 <section class="breeds-table">
-  <header class="breeds-table__header">
-    <h2>Razas de gatos</h2>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Razas de gatos</mat-card-title>
+    </mat-card-header>
 
-    <div class="breeds-table__search">
-      <label for="breed-search">Buscar raza</label>
-      <div class="breeds-table__search-input">
-        <input
-          id="breed-search"
-          type="text"
-          [(ngModel)]="searchTerm"
-          placeholder="Nombre, origen o temperamento"
-        />
-        <button type="button" (click)="onSearch()">
+    <mat-card-content>
+      <div class="breeds-table__search">
+        <mat-form-field appearance="outline" class="breeds-table__search-field">
+          <mat-label>Buscar raza</mat-label>
+          <input
+            matInput
+            id="breed-search"
+            type="text"
+            [(ngModel)]="searchTerm"
+            placeholder="Nombre, origen o temperamento"
+          />
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="button" (click)="onSearch()">
           Buscar
         </button>
       </div>
-    </div>
-  </header>
-  @if (filteredBreeds.length) {
-    <div class="breeds-table__content">
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Origen</th>
-            <th>Esperanza de vida</th>
-            <th>Temperamento</th>
-            <th>Inteligencia</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (breed of filteredBreeds; track breed.name) {
-            <tr>
-              <td>{{ breed.name }}</td>
-              <td>{{ breed.origin }}</td>
-              <td>{{ breed.lifeSpan }} años</td>
-              <td>{{ breed.temperament }}</td>
-              <td>{{ breed.intelligence }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  } @else {
-    <p>No se encontraron razas para el criterio de búsqueda ingresado.</p>
-  }
+
+      @if (filteredBreeds.length) {
+        <div class="breeds-table__content">
+          <table mat-table [dataSource]="filteredBreeds" class="mat-elevation-z1">
+            <!-- Nombre -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Nombre</th>
+              <td mat-cell *matCellDef="let breed">{{ breed.name }}</td>
+            </ng-container>
+
+            <!-- Origen -->
+            <ng-container matColumnDef="origin">
+              <th mat-header-cell *matHeaderCellDef>Origen</th>
+              <td mat-cell *matCellDef="let breed">{{ breed.origin }}</td>
+            </ng-container>
+
+            <!-- Esperanza de vida -->
+            <ng-container matColumnDef="lifeSpan">
+              <th mat-header-cell *matHeaderCellDef>Esperanza de vida</th>
+              <td mat-cell *matCellDef="let breed">{{ breed.lifeSpan }} años</td>
+            </ng-container>
+
+            <!-- Temperamento -->
+            <ng-container matColumnDef="temperament">
+              <th mat-header-cell *matHeaderCellDef>Temperamento</th>
+              <td mat-cell *matCellDef="let breed">{{ breed.temperament }}</td>
+            </ng-container>
+
+            <!-- Inteligencia -->
+            <ng-container matColumnDef="intelligence">
+              <th mat-header-cell *matHeaderCellDef>Inteligencia</th>
+              <td mat-cell *matCellDef="let breed">{{ breed.intelligence }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="['name', 'origin', 'lifeSpan', 'temperament', 'intelligence']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['name', 'origin', 'lifeSpan', 'temperament', 'intelligence'];"></tr>
+          </table>
+        </div>
+      } @else {
+        <p>No se encontraron razas para el criterio de búsqueda ingresado.</p>
+      }
+    </mat-card-content>
+  </mat-card>
 </section>

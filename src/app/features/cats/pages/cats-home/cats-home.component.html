@@ -1,60 +1,75 @@
 <section class="cats-home">
-  <header class="cats-home__header">
-    <h1>Explora razas de gatos</h1>
-    <div class="cats-home__selector">
-      <label for="breed-select">Selecciona una raza</label>
-      <select
-        id="breed-select"
-        [(ngModel)]="selectedBreedId"
-        (change)="onBreedChange()"
-      >
-        @for (breed of breeds; track breed.id) {
-          <option [value]="breed.id">
-            {{ breed.name }}
-          </option>
-        }
-      </select>
-    </div>
-  </header>
-  @if (selectedBreed) {
-    <main class="cats-home__content">
-      <section class="cats-home__carousel">
-        <div class="carousel">
-          <button type="button" (click)="prevImage()">anterior;</button>
-          <div class="carousel__image-wrapper">
-            @if (selectedBreed.imageUrls.length) {
-              <img
-                [src]="selectedBreed.imageUrls[currentImageIndex]"
-                [alt]="selectedBreed.name"
-                [title]="selectedBreed.name"
-              />
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Explora razas de gatos</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="cats-home__selector">
+        <mat-form-field appearance="outline" class="cats-home__selector-field">
+          <mat-label>Selecciona una raza</mat-label>
+          <mat-select
+            [(ngModel)]="selectedBreedId"
+            (selectionChange)="onBreedChange()"
+          >
+            @for (breed of breeds; track breed.id) {
+              <mat-option [value]="breed.id">
+                {{ breed.name }}
+              </mat-option>
             }
-          </div>
-          <button type="button" (click)="nextImage()">siguiente</button>
-        </div>
-        @if (selectedBreed.imageUrls.length > 1) {
-          <div class="carousel__pagination">
-            @for (img of selectedBreed.imageUrls; let i = $index; track i) {
-              <span
-                class="carousel__dot"
-                [class.carousel__dot--active]="i === currentImageIndex"
-              ></span>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      @if (selectedBreed) {
+        <main class="cats-home__content">
+          <section class="cats-home__carousel">
+            <div class="carousel">
+              <button mat-icon-button color="primary" type="button" (click)="prevImage()">
+                <mat-icon>chevron_left</mat-icon>
+              </button>
+
+              <mat-card class="carousel__image-wrapper">
+                @if (selectedBreed.imageUrls.length) {
+                  <img
+                    [src]="selectedBreed.imageUrls[currentImageIndex]"
+                    [alt]="selectedBreed.name"
+                    [title]="selectedBreed.name"
+                  />
+                }
+              </mat-card>
+
+              <button mat-icon-button color="primary" type="button" (click)="nextImage()">
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+            </div>
+
+            @if (selectedBreed.imageUrls.length > 1) {
+              <div class="carousel__pagination">
+                @for (img of selectedBreed.imageUrls; let i = $index; track i) {
+                  <span
+                    class="carousel__dot"
+                    [class.carousel__dot--active]="i === currentImageIndex"
+                  ></span>
+                }
+              </div>
             }
-          </div>
-        }
-      </section>
-      <section class="cats-home__info">
-        <h2>{{ selectedBreed.name }}</h2>
-        <p><strong>Origen:</strong> {{ selectedBreed.origin }}</p>
-        <p><strong>Esperanza de vida:</strong> {{ selectedBreed.lifeSpan }} años</p>
-        <p><strong>Temperamento:</strong> {{ selectedBreed.temperament }}</p>
-        <article class="cats-home__description">
-          <h3>Descripción</h3>
-          <p>{{ selectedBreed.description }}</p>
-        </article>
-      </section>
-    </main>
-  } @else {
-    <p>No hay razas disponibles para mostrar.</p>
-  }
+          </section>
+
+          <section class="cats-home__info">
+            <h2>{{ selectedBreed.name }}</h2>
+            <p><strong>Origen:</strong> {{ selectedBreed.origin }}</p>
+            <p><strong>Esperanza de vida:</strong> {{ selectedBreed.lifeSpan }} años</p>
+            <p><strong>Temperamento:</strong> {{ selectedBreed.temperament }}</p>
+            <article class="cats-home__description">
+              <h3>Descripción</h3>
+              <p>{{ selectedBreed.description }}</p>
+            </article>
+          </section>
+        </main>
+      } @else {
+        <p>No hay razas disponibles para mostrar.</p>
+      }
+    </mat-card-content>
+  </mat-card>
 </section>

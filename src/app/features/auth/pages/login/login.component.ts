@@ -19,7 +19,10 @@ export class LoginComponent {
   password = '';
   loginFailed = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly router: Router
+  ) {}
 
   onSubmit(): void {
     this.loginFailed = false;
