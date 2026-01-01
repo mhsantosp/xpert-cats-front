@@ -1,0 +1,60 @@
+<section class="cats-home">
+  <header class="cats-home__header">
+    <h1>Explora razas de gatos</h1>
+    <div class="cats-home__selector">
+      <label for="breed-select">Selecciona una raza</label>
+      <select
+        id="breed-select"
+        [(ngModel)]="selectedBreedId"
+        (change)="onBreedChange()"
+      >
+        @for (breed of breeds; track breed.id) {
+          <option [value]="breed.id">
+            {{ breed.name }}
+          </option>
+        }
+      </select>
+    </div>
+  </header>
+  @if (selectedBreed) {
+    <main class="cats-home__content">
+      <section class="cats-home__carousel">
+        <div class="carousel">
+          <button type="button" (click)="prevImage()">anterior;</button>
+          <div class="carousel__image-wrapper">
+            @if (selectedBreed.imageUrls.length) {
+              <img
+                [src]="selectedBreed.imageUrls[currentImageIndex]"
+                [alt]="selectedBreed.name"
+                [title]="selectedBreed.name"
+              />
+            }
+          </div>
+          <button type="button" (click)="nextImage()">siguiente</button>
+        </div>
+        @if (selectedBreed.imageUrls.length > 1) {
+          <div class="carousel__pagination">
+            @for (img of selectedBreed.imageUrls; let i = $index; track i) {
+              <span
+                class="carousel__dot"
+                [class.carousel__dot--active]="i === currentImageIndex"
+              ></span>
+            }
+          </div>
+        }
+      </section>
+      <section class="cats-home__info">
+        <h2>{{ selectedBreed.name }}</h2>
+        <p><strong>Origen:</strong> {{ selectedBreed.origin }}</p>
+        <p><strong>Esperanza de vida:</strong> {{ selectedBreed.lifeSpan }} años</p>
+        <p><strong>Temperamento:</strong> {{ selectedBreed.temperament }}</p>
+        <article class="cats-home__description">
+          <h3>Descripción</h3>
+          <p>{{ selectedBreed.description }}</p>
+        </article>
+      </section>
+    </main>
+  } @else {
+    <p>No hay razas disponibles para mostrar.</p>
+  }
+</section>

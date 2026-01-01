@@ -1,0 +1,23 @@
+<section class="profile">
+  <mat-card>
+    <mat-card-title>Perfil de usuario</mat-card-title>
+    <mat-card-content>
+      @if (user) {
+        <div class="profile__card">
+          <p><strong>Usuario:</strong> {{ user.username }}</p>
+          <p><strong>Email:</strong> {{ user.email }}</p>
+        </div>
+      } @else {
+        <p>No hay usuario en sesión.</p>
+      }
+    </mat-card-content>
+
+    @if (user) {
+      <mat-card-actions>
+        <button mat-raised-button color="warn" type="button" (click)="logout()">
+          Cerrar sesión
+        </button>
+      </mat-card-actions>
+    }
+  </mat-card>
+</section>

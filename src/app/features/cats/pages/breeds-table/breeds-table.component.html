@@ -1,0 +1,48 @@
+<section class="breeds-table">
+  <header class="breeds-table__header">
+    <h2>Razas de gatos</h2>
+
+    <div class="breeds-table__search">
+      <label for="breed-search">Buscar raza</label>
+      <div class="breeds-table__search-input">
+        <input
+          id="breed-search"
+          type="text"
+          [(ngModel)]="searchTerm"
+          placeholder="Nombre, origen o temperamento"
+        />
+        <button type="button" (click)="onSearch()">
+          Buscar
+        </button>
+      </div>
+    </div>
+  </header>
+  @if (filteredBreeds.length) {
+    <div class="breeds-table__content">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Origen</th>
+            <th>Esperanza de vida</th>
+            <th>Temperamento</th>
+            <th>Inteligencia</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (breed of filteredBreeds; track breed.name) {
+            <tr>
+              <td>{{ breed.name }}</td>
+              <td>{{ breed.origin }}</td>
+              <td>{{ breed.lifeSpan }} años</td>
+              <td>{{ breed.temperament }}</td>
+              <td>{{ breed.intelligence }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <p>No se encontraron razas para el criterio de búsqueda ingresado.</p>
+  }
+</section>

@@ -1,0 +1,76 @@
+<section class="auth auth--register">
+  <h1>Registro</h1>
+
+  <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+    <div class="auth__field">
+      <label for="username">Usuario</label>
+      <input
+        id="username"
+        name="username"
+        type="text"
+        required
+        [(ngModel)]="username"
+        #usernameCtrl="ngModel"
+      />
+      @if (usernameCtrl.invalid && (usernameCtrl.dirty || usernameCtrl.touched)) {
+        <small class="auth__error">El usuario es obligatorio.</small>
+      }
+    </div>
+
+    <div class="auth__field">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        name="email"
+        type="email"
+        required
+        [(ngModel)]="email"
+        #emailCtrl="ngModel"
+      />
+      @if (emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched)) {
+        <small class="auth__error">El email es obligatorio y debe ser válido.</small>
+      }
+    </div>
+
+    <div class="auth__field">
+      <label for="password">Contraseña</label>
+      <input
+        id="password"
+        name="password"
+        type="password"
+        required
+        minlength="3"
+        [(ngModel)]="password"
+        #passwordCtrl="ngModel"
+      />
+      @if (passwordCtrl.invalid && (passwordCtrl.dirty || passwordCtrl.touched)) {
+        <small class="auth__error">La contraseña es obligatoria (mínimo 3 caracteres).</small>
+      }
+    </div>
+
+    <div class="auth__field">
+      <label for="confirmPassword">Confirmar contraseña</label>
+      <input
+        id="confirmPassword"
+        name="confirmPassword"
+        type="password"
+        required
+        [(ngModel)]="confirmPassword"
+        #confirmPasswordCtrl="ngModel"
+      />
+    </div>
+
+    @if (registerFailed) {
+      <p class="auth__error">No se pudo registrar. Verifica los datos o que las contraseñas coincidan.</p>
+    }
+
+    <button type="submit" [disabled]="registerForm.invalid">
+      Registrarse
+    </button>
+  </form>
+
+  <p class="auth__hint">
+    ¿Ya tienes cuenta?
+    <a routerLink="/login">Inicia sesión aquí</a>
+  </p>
+</section>

@@ -1,0 +1,56 @@
+<section class="auth auth--login">
+  <mat-card>
+    <mat-card-title>Iniciar sesión</mat-card-title>
+    <mat-card-content>
+      <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+        <mat-form-field appearance="outline" class="auth__field">
+          <mat-label>Usuario</mat-label>
+          <input
+            matInput
+            id="username"
+            name="username"
+            type="text"
+            required
+            [(ngModel)]="username"
+            #usernameCtrl="ngModel"
+          />
+          @if (usernameCtrl.invalid && (usernameCtrl.dirty || usernameCtrl.touched)) {
+            <mat-error>El usuario es obligatorio.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="auth__field">
+          <mat-label>Contraseña</mat-label>
+          <input
+            matInput
+            id="password"
+            name="password"
+            type="password"
+            required
+            minlength="3"
+            [(ngModel)]="password"
+            #passwordCtrl="ngModel"
+          />
+          @if (passwordCtrl.invalid && (passwordCtrl.dirty || passwordCtrl.touched)) {
+            <mat-error>La contraseña es obligatoria (mínimo 3 caracteres).</mat-error>
+          }
+        </mat-form-field>
+
+        @if (loginFailed) {
+          <p class="auth__error">No se pudo iniciar sesión. Verifica tus datos.</p>
+        }
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
+          Entrar
+        </button>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <p class="auth__hint">
+        ¿No tienes cuenta?
+        <a routerLink="/register">Regístrate aquí</a>
+      </p>
+    </mat-card-actions>
+  </mat-card>
+</section>
