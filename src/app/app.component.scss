@@ -1,0 +1,80 @@
+// Layout principal de la aplicación
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.app-header__left {
+  display: flex;
+  align-items: center;
+}
+
+.app-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.app-header__spacer {
+  flex: 1 1 auto;
+}
+
+.app-header__right {
+  display: flex;
+  align-items: center;
+}
+
+.logout-button {
+  color: #fff;
+}
+
+.app-body {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.app-aside {
+  width: 220px;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  background-color: #fafafa;
+}
+
+.side-nav {
+  height: 100%;
+}
+
+.app-content {
+  flex: 1 1 auto;
+  padding: 1rem;
+  overflow: auto;
+}
+
+// Estilo para el enlace activo en el menú lateral
+a.active {
+  background-color: rgba(25, 118, 210, 0.08);
+}
+
+mat-toolbar {
+  border-bottom: 1px solid cornflowerblue;
+}
+
+// Responsive: en pantallas pequeñas el aside pasa arriba del contenido
+@media (max-width: 768px) {
+  .app-body {
+    flex-direction: column;
+  }
+
+  .app-aside {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  }
+}
+

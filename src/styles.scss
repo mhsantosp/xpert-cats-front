@@ -34,5 +34,17 @@ body {
   // Reset the user agent margin.
   margin: 0;
   height: 100%;
+
+  app-login, app-register {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  mat-card {
+    padding: 1rem;
+  }
 }
 /* You can add global styles to this file, and also import other style files */
