@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
+import { vi } from 'vitest';
 
 import { CatsHomeComponent } from './cats-home.component';
 import { CatsApiService, CatBreedDto, CatImageDto } from '../../../../data/cats-api.service';
-
-declare const jasmine: any;
 
 describe('CatsHomeComponent', () => {
   let component: CatsHomeComponent;
@@ -12,7 +11,10 @@ describe('CatsHomeComponent', () => {
   let catsApiSpy: any;
 
   beforeEach(async () => {
-    catsApiSpy = jasmine.createSpyObj('CatsApiService', ['getBreeds', 'getImagesByBreedId']);
+    catsApiSpy = {
+      getBreeds: vi.fn(),
+      getImagesByBreedId: vi.fn(),
+    };
 
     await TestBed.configureTestingModule({
       imports: [CatsHomeComponent],
@@ -39,7 +41,7 @@ describe('CatsHomeComponent', () => {
       },
     ];
 
-    catsApiSpy.getBreeds.and.returnValue(of(breeds));
+    catsApiSpy.getBreeds.mockReturnValue(of(breeds));
 
     component.ngOnInit();
 
@@ -73,8 +75,8 @@ describe('CatsHomeComponent', () => {
       { id: '2', url: 'http://image2', breedId: 'abys' },
     ];
 
-    catsApiSpy.getBreeds.and.returnValue(of(breeds));
-    catsApiSpy.getImagesByBreedId.and.returnValue(of(images));
+    catsApiSpy.getBreeds.mockReturnValue(of(breeds));
+    catsApiSpy.getImagesByBreedId.mockReturnValue(of(images));
 
     component.ngOnInit();
     // Simular que el usuario selecciona la raza

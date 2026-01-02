@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
+import { vi } from 'vitest';
 
 import { BreedsTableComponent } from './breeds-table.component';
 import { CatsApiService, CatBreedDto } from '../../../../data/cats-api.service';
-
-declare const jasmine: any;
 
 describe('BreedsTableComponent', () => {
   let component: BreedsTableComponent;
@@ -12,7 +11,9 @@ describe('BreedsTableComponent', () => {
   let catsApiSpy: any;
 
   beforeEach(async () => {
-    catsApiSpy = jasmine.createSpyObj('CatsApiService', ['getBreeds']);
+    catsApiSpy = {
+      getBreeds: vi.fn(),
+    };
 
     await TestBed.configureTestingModule({
       imports: [BreedsTableComponent],
@@ -47,7 +48,7 @@ describe('BreedsTableComponent', () => {
       },
     ];
 
-    catsApiSpy.getBreeds.and.returnValue(of(breeds));
+    catsApiSpy.getBreeds.mockReturnValue(of(breeds));
 
     component.ngOnInit();
 
@@ -76,7 +77,7 @@ describe('BreedsTableComponent', () => {
       },
     ];
 
-    catsApiSpy.getBreeds.and.returnValue(of(breeds));
+    catsApiSpy.getBreeds.mockReturnValue(of(breeds));
 
     component.ngOnInit();
     component.searchTerm = 'Aby';
@@ -99,7 +100,7 @@ describe('BreedsTableComponent', () => {
       },
     ];
 
-    catsApiSpy.getBreeds.and.returnValue(of(breeds));
+    catsApiSpy.getBreeds.mockReturnValue(of(breeds));
 
     component.ngOnInit();
     component.searchTerm = 'abys';

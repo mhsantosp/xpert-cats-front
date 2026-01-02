@@ -3,13 +3,14 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 
 import { AppComponent } from './app.component';
+import { routes } from './app.routes';
 
 describe('AppComponent', () => {
   let router: Router;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent, RouterTestingModule.withRoutes([])],
+      imports: [AppComponent, RouterTestingModule.withRoutes(routes)],
     }).compileComponents();
 
     router = TestBed.inject(Router);
@@ -24,6 +25,7 @@ describe('AppComponent', () => {
   it('should render only router-outlet (no shell) on auth routes', async () => {
     const fixture = TestBed.createComponent(AppComponent);
     await router.navigateByUrl('/login');
+    await fixture.whenStable();
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
@@ -35,6 +37,7 @@ describe('AppComponent', () => {
   it('should render the app shell on non-auth routes', async () => {
     const fixture = TestBed.createComponent(AppComponent);
     await router.navigateByUrl('/cats');
+    await fixture.whenStable();
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
