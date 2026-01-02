@@ -26,6 +26,11 @@ export class AppComponent {
     return this.router.url.startsWith('/login');
   }
 
+  get isAuthRoute(): boolean {
+    // Rutas de autenticación que deben mostrarse sin el shell (toolbar + menú)
+    return this.router.url.startsWith('/login') || this.router.url.startsWith('/register');
+  }
+
   onLogout(): void {
     this.authService.logout();
     void this.router.navigate(['/login']);

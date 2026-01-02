@@ -13,6 +13,7 @@
             id="breed-search"
             type="text"
             [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange($event)"
             placeholder="Nombre, origen o temperamento"
           />
         </mat-form-field>

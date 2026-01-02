@@ -5,6 +5,7 @@ section.cats-home__carousel {
     align-items: center;
     .carousel_img {
       max-width: calc(100% - 50%);
+      margin: 0 1rem;
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -19,15 +19,18 @@ export class LoginComponent {
   username = '';
   password = '';
   loginFailed = false;
+  submitted = false;
 
   constructor(
     private readonly authService: AuthService,
     private readonly authApi: AuthApiService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly cdr: ChangeDetectorRef,
   ) {}
 
   onSubmit(): void {
     this.loginFailed = false;
+    this.submitted = true;
 
     this.authApi
       .login({ username: this.username, password: this.password })
@@ -37,10 +40,12 @@ export class LoginComponent {
             username: response.username,
             email: response.email,
           });
-          void this.router.navigate(['/profile']);
+          void this.router.navigate(['/cats']);
         },
-        error: () => {
+        error: (err) => {
+          console.error('Login failed:', err);
           this.loginFailed = true;
+          this.cdr.markForCheck();
         },
       });
   }

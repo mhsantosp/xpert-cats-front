@@ -10,6 +10,8 @@
             id="username"
             name="username"
             type="text"
+            autocomplete="username"
+            placeholder="Ingresa tu usuario"
             required
             [(ngModel)]="username"
             #usernameCtrl="ngModel"
@@ -26,6 +28,8 @@
             id="password"
             name="password"
             type="password"
+            autocomplete="current-password"
+            placeholder="Ingresa tu contraseña"
             required
             minlength="3"
             [(ngModel)]="password"

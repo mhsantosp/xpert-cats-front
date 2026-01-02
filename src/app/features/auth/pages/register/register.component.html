@@ -10,6 +10,7 @@
             id="username"
             name="username"
             type="text"
+            autocomplete="username"
             required
             [(ngModel)]="username"
             #usernameCtrl="ngModel"
@@ -27,6 +28,7 @@
             id="email"
             name="email"
             type="email"
+            autocomplete="email"
             required
             [(ngModel)]="email"
             #emailCtrl="ngModel"
@@ -44,6 +46,7 @@
             id="password"
             name="password"
             type="password"
+            autocomplete="new-password"
             required
             minlength="3"
             [(ngModel)]="password"
@@ -62,6 +65,7 @@
             id="confirmPassword"
             name="confirmPassword"
             type="password"
+            autocomplete="new-password"
             required
             [(ngModel)]="confirmPassword"
             #confirmPasswordCtrl="ngModel"

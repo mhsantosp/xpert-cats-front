@@ -7,7 +7,7 @@ import { RegisterComponent } from './features/auth/pages/register/register.compo
 import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'cats', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'cats', component: CatsHomeComponent },
   { path: 'cats/breeds', component: BreedsTableComponent },
   { path: 'login', component: LoginComponent },

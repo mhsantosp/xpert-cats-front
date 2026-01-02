@@ -40,6 +40,14 @@ export class BreedsTableComponent implements OnInit {
     });
   }
 
+  onSearchChange(value: string): void {
+    this.searchTerm = value;
+    if (!this.searchTerm.trim()) {
+      // Si el campo queda vacío, limpiamos los resultados
+      this.filteredBreeds = [];
+    }
+  }
+
   onSearch(): void {
     const term = this.searchTerm.trim().toLowerCase();
     if (!term) {
