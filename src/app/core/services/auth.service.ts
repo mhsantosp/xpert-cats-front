@@ -22,8 +22,7 @@ export class AuthService {
       email: `${username}@example.com`,
     };
 
-    localStorage.setItem(this.TOKEN_KEY, fakeToken);
-    localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+    this.setSession(fakeToken, user);
     return true;
   }
 
@@ -36,9 +35,13 @@ export class AuthService {
     const fakeToken = 'mock-token-' + username;
     const user: AuthUser = { username, email };
 
-    localStorage.setItem(this.TOKEN_KEY, fakeToken);
-    localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+    this.setSession(fakeToken, user);
     return true;
+  }
+
+  setSession(token: string, user: AuthUser): void {
+    localStorage.setItem(this.TOKEN_KEY, token);
+    localStorage.setItem(this.USER_KEY, JSON.stringify(user));
   }
 
   logout(): void {

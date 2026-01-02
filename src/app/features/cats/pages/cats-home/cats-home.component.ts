@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { CatsApiService, CatBreedDto, CatImageDto } from '../../../../data/cats-api.service';
 
 interface BreedDetail {
   id: string;
@@ -31,61 +32,71 @@ interface BreedDetail {
   templateUrl: './cats-home.component.html',
   styleUrl: './cats-home.component.scss',
 })
-export class CatsHomeComponent {
-  // Lista mock de razas para la vista 1 (luego se podrá mover a un servicio)
-  breeds: BreedDetail[] = [
-    {
-      id: 'abys',
-      name: 'Abyssinian',
-      origin: 'Ethiopia',
-      lifeSpan: '14-15',
-      temperament: 'Active, Energetic',
-      description:
-        'La raza Abyssinian es muy activa, curiosa y juguetona. Le gusta explorar y relacionarse con las personas.',
-      imageUrls: [
-        'https://placekitten.com/400/250',
-        'https://placekitten.com/401/250',
-        'https://placekitten.com/402/250',
-      ],
-    },
-    {
-      id: 'beng',
-      name: 'Bengal',
-      origin: 'United States',
-      lifeSpan: '12-16',
-      temperament: 'Alert, Agile',
-      description:
-        'El Bengal es un gato muy activo, de apariencia salvaje pero sociable y con alta energía.',
-      imageUrls: [
-        'https://placekitten.com/410/250',
-        'https://placekitten.com/411/250',
-      ],
-    },
-    {
-      id: 'pers',
-      name: 'Persian',
-      origin: 'Iran',
-      lifeSpan: '10-17',
-      temperament: 'Calm, Gentle',
-      description:
-        'El Persa es una raza tranquila, cariñosa y de baja actividad, ideal para ambientes relajados.',
-      imageUrls: [
-        'https://placekitten.com/420/250',
-        'https://placekitten.com/421/250',
-      ],
-    },
-  ];
-
-  selectedBreedId: string = this.breeds[0]?.id ?? '';
+export class CatsHomeComponent implements OnInit {
+  breeds: BreedDetail[] = [];
+  selectedBreedId = '';
   currentImageIndex = 0;
+
+  constructor(private readonly catsApi: CatsApiService) {}
+
+  ngOnInit(): void {
+    this.catsApi.getBreeds().subscribe({
+      next: (breeds: CatBreedDto[]) => {
+        console.log('1. Raw breeds data:', breeds[0]);
+        this.breeds = breeds.map((b) => ({
+          id: b.id,
+          name: b.name,
+          origin: b.origin,
+          lifeSpan: b.lifeSpan,
+          temperament: b.temperament,
+          description: b.description,
+          imageUrls: [],
+        }));
+        console.log('2. Loaded breeds:', this.breeds[0]);
+
+        if (this.breeds.length > 0) {
+          console.log('3. Setting first breed as selected:');
+
+          this.selectedBreedId = this.breeds[0].id;
+          this.loadImagesForSelectedBreed();
+        }
+      },
+      error: (error) => {
+        console.log('4. Failed to load cat breeds:', error);
+        this.breeds = [];
+      },
+    });
+  }
 
   get selectedBreed(): BreedDetail | undefined {
     return this.breeds.find((b) => b.id === this.selectedBreedId);
   }
 
   onBreedChange(): void {
-    // Resetear carrusel al cambiar de raza
     this.currentImageIndex = 0;
+    this.loadImagesForSelectedBreed();
+  }
+
+  private loadImagesForSelectedBreed(): void {
+    const breedId = this.selectedBreedId;
+    if (!breedId) return;
+
+    this.catsApi.getImagesByBreedId(breedId).subscribe({
+      next: (images: CatImageDto[]) => {
+        const urls = images.map((img) => img.url);
+        const breed = this.selectedBreed;
+        if (breed) {
+          breed.imageUrls = urls;
+          this.currentImageIndex = 0;
+        }
+      },
+      error: () => {
+        const breed = this.selectedBreed;
+        if (breed) {
+          breed.imageUrls = [];
+        }
+      },
+    });
   }
 
   nextImage(): void {

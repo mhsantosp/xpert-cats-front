@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
+import { CatsApiService, CatBreedDto } from '../../../../data/cats-api.service';
 
 @Component({
   selector: 'app-breeds-table',
@@ -13,17 +14,25 @@ import { MatTableModule } from '@angular/material/table';
   templateUrl: './breeds-table.component.html',
   styleUrl: './breeds-table.component.scss',
 })
-export class BreedsTableComponent {
+export class BreedsTableComponent implements OnInit {
   searchTerm = '';
+  breeds: CatBreedDto[] = [];
+  filteredBreeds: CatBreedDto[] = [];
 
-  breeds = [
-    { name: 'Abyssinian', origin: 'Ethiopia', lifeSpan: '14-15', temperament: 'Active, Energetic', intelligence: 5 },
-    { name: 'Bengal', origin: 'United States', lifeSpan: '12-16', temperament: 'Alert, Agile', intelligence: 5 },
-    { name: 'Persian', origin: 'Iran', lifeSpan: '10-17', temperament: 'Calm, Gentle', intelligence: 3 },
-    { name: 'Siamese', origin: 'Thailand', lifeSpan: '15-20', temperament: 'Affectionate, Social', intelligence: 5 },
-  ];
+  constructor(private readonly catsApi: CatsApiService) {}
 
-  filteredBreeds = [...this.breeds];
+  ngOnInit(): void {
+    this.catsApi.getBreeds().subscribe({
+      next: (breeds) => {
+        this.breeds = breeds;
+        this.filteredBreeds = [...breeds];
+      },
+      error: () => {
+        this.breeds = [];
+        this.filteredBreeds = [];
+      },
+    });
+  }
 
   onSearch(): void {
     const term = this.searchTerm.trim().toLowerCase();

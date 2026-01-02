@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../../../core/services/auth.service';
+import { AuthApiService } from '../../../../data/auth-api.service';
 
 @Component({
   selector: 'app-login',
@@ -21,16 +22,26 @@ export class LoginComponent {
 
   constructor(
     private readonly authService: AuthService,
+    private readonly authApi: AuthApiService,
     private readonly router: Router
   ) {}
 
   onSubmit(): void {
     this.loginFailed = false;
-    const ok = this.authService.login(this.username, this.password);
-    if (ok) {
-      this.router.navigate(['/profile']);
-    } else {
-      this.loginFailed = true;
-    }
+
+    this.authApi
+      .login({ username: this.username, password: this.password })
+      .subscribe({
+        next: (response) => {
+          this.authService.setSession(response.token, {
+            username: response.username,
+            email: response.email,
+          });
+          void this.router.navigate(['/profile']);
+        },
+        error: () => {
+          this.loginFailed = true;
+        },
+      });
   }
 }
