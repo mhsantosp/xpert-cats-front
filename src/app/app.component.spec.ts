@@ -1,11 +1,18 @@
 import { TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
+
 import { AppComponent } from './app.component';
 
-describe('App', () => {
+describe('AppComponent', () => {
+  let router: Router;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent],
+      imports: [AppComponent, RouterTestingModule.withRoutes([])],
     }).compileComponents();
+
+    router = TestBed.inject(Router);
   });
 
   it('should create the app', () => {
@@ -14,10 +21,26 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render title', async () => {
+  it('should render only router-outlet (no shell) on auth routes', async () => {
     const fixture = TestBed.createComponent(AppComponent);
-    await fixture.whenStable();
+    await router.navigateByUrl('/login');
+    fixture.detectChanges();
+
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, xpert-cats-front');
+
+    // En rutas de auth no debe renderizarse el shell
+    expect(compiled.querySelector('.app-shell')).toBeNull();
+  });
+
+  it('should render the app shell on non-auth routes', async () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    await router.navigateByUrl('/cats');
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    // En rutas normales debe aparecer el shell con toolbar
+    expect(compiled.querySelector('.app-shell')).not.toBeNull();
+    expect(compiled.querySelector('.app-header')).not.toBeNull();
   });
 });
