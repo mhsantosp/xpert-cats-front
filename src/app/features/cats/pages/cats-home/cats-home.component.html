@@ -25,21 +25,30 @@
         <main class="cats-home__content">
           <section class="cats-home__carousel">
             <div class="carousel">
-              <button mat-icon-button color="primary" type="button" (click)="prevImage()">
+              <button matIconButton color="primary" type="button" (click)="prevImage()">
                 <mat-icon>chevron_left</mat-icon>
               </button>
 
-              <mat-card class="carousel__image-wrapper">
-                @if (selectedBreed.imageUrls.length) {
+              <mat-card class="carousel_img carousel__image-wrapper">
+                @if (isLoadingImages) {
+                  <div class="carousel__loading">
+                    <mat-progress-spinner
+                      diameter="48"
+                      mode="indeterminate"
+                    ></mat-progress-spinner>
+                  </div>
+                } @else if (selectedBreed.imageUrls.length) {
                   <img
+                    class="carousel__image"
                     [src]="selectedBreed.imageUrls[currentImageIndex]"
                     [alt]="selectedBreed.name"
-                    [title]="selectedBreed.name"
                   />
+                } @else {
+                  <p>No hay imágenes disponibles para esta raza.</p>
                 }
               </mat-card>
 
-              <button mat-icon-button color="primary" type="button" (click)="nextImage()">
+              <button matIconButton color="primary" type="button" (click)="nextImage()">
                 <mat-icon>chevron_right</mat-icon>
               </button>
             </div>

@@ -1,0 +1,10 @@
+section.cats-home__carousel {
+  .carousel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .carousel_img {
+      max-width: calc(100% - 50%);
+    }
+  }
+}

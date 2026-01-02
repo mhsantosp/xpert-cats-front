@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CatsApiService, CatBreedDto, CatImageDto } from '../../../../data/cats-api.service';
 
 interface BreedDetail {
@@ -28,21 +29,26 @@ interface BreedDetail {
     MatSelectModule,
     MatButtonModule,
     MatIconModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './cats-home.component.html',
   styleUrl: './cats-home.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CatsHomeComponent implements OnInit {
   breeds: BreedDetail[] = [];
   selectedBreedId = '';
   currentImageIndex = 0;
+  isLoadingImages = false;
 
-  constructor(private readonly catsApi: CatsApiService) {}
+  constructor(
+    private readonly catsApi: CatsApiService,
+    private readonly cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
     this.catsApi.getBreeds().subscribe({
       next: (breeds: CatBreedDto[]) => {
-        console.log('1. Raw breeds data:', breeds[0]);
         this.breeds = breeds.map((b) => ({
           id: b.id,
           name: b.name,
@@ -52,18 +58,11 @@ export class CatsHomeComponent implements OnInit {
           description: b.description,
           imageUrls: [],
         }));
-        console.log('2. Loaded breeds:', this.breeds[0]);
-
-        if (this.breeds.length > 0) {
-          console.log('3. Setting first breed as selected:');
-
-          this.selectedBreedId = this.breeds[0].id;
-          this.loadImagesForSelectedBreed();
-        }
+        this.cdr.markForCheck();
       },
       error: (error) => {
-        console.log('4. Failed to load cat breeds:', error);
         this.breeds = [];
+        this.cdr.markForCheck();
       },
     });
   }
@@ -81,6 +80,8 @@ export class CatsHomeComponent implements OnInit {
     const breedId = this.selectedBreedId;
     if (!breedId) return;
 
+    this.isLoadingImages = true;
+
     this.catsApi.getImagesByBreedId(breedId).subscribe({
       next: (images: CatImageDto[]) => {
         const urls = images.map((img) => img.url);
@@ -89,12 +90,16 @@ export class CatsHomeComponent implements OnInit {
           breed.imageUrls = urls;
           this.currentImageIndex = 0;
         }
+        this.isLoadingImages = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         const breed = this.selectedBreed;
         if (breed) {
           breed.imageUrls = [];
         }
+        this.isLoadingImages = false;
+        this.cdr.markForCheck();
       },
     });
   }

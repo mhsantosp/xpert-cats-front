@@ -25,7 +25,13 @@ export class BreedsTableComponent implements OnInit {
     this.catsApi.getBreeds().subscribe({
       next: (breeds) => {
         this.breeds = breeds;
-        this.filteredBreeds = [...breeds];
+        // Al inicio no mostramos datos hasta que el usuario ingrese un criterio.
+        // Si el usuario ya escribió algo antes de que llegaran los datos, aplicamos el filtro.
+        if (this.searchTerm.trim()) {
+          this.onSearch();
+        } else {
+          this.filteredBreeds = [];
+        }
       },
       error: () => {
         this.breeds = [];
@@ -37,7 +43,8 @@ export class BreedsTableComponent implements OnInit {
   onSearch(): void {
     const term = this.searchTerm.trim().toLowerCase();
     if (!term) {
-      this.filteredBreeds = [...this.breeds];
+      // Si no hay criterio de búsqueda, no mostramos filas
+      this.filteredBreeds = [];
       return;
     }
 
